@@ -1,0 +1,10 @@
+streamlit
+pydantic
+langchain
+langchain-core
+langchain-community
+langchain-groq
+langgraph
+typing-extensions
+tiktoken
+requests
