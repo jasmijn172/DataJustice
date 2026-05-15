@@ -1,4 +1,4 @@
-streamlit run SU_Data_Justice_JP.py
+# streamlit run SU_Data_Justice_JP.py
 
 import os
 import streamlit as st
