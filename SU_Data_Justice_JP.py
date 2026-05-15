@@ -1,10 +1,8 @@
-
 """
 Data Justice Assistent — Streamlit App
 Exact ontwerp gebaseerd op Archive_4 design
 Groq API (llama-3.3-70b-versatile) voor AI chat
 """
-
 
 import streamlit as st
 import json
@@ -12,21 +10,7 @@ import os
 import time
 import math
 import re
-
-
-
-
-# def getgroqclient():
-#     api_key = st.secrets.get("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") or os.environ.get("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")
-#     if not api_key:
-#         return None
-#     return Groq(api_key=api_key)
-
-# client = getgroqclient()
-
-# if not client:
-#     st.error("Voeg GROQ_API_KEY toe aan secrets of environment variables.")
-#     st.stop()
+from groq import Groq
 
 # ─────────────────────────────────────────────
 # PAGINA CONFIG
@@ -52,12 +36,6 @@ html, body, .stApp {
     font-family: 'DM Sans', sans-serif !important;
     font-size: 13px !important;
 }
-
-    p {
- background-image: url(‘Background_SU.png’);
-}
-
-
 #MainMenu, footer, header { visibility: hidden; }
 .block-container {
     padding: 0 !important;
@@ -964,14 +942,17 @@ hr { border-color: #1C2A40 !important; margin: 8px 0 !important; }</style>
 def get_groq_client():
     api_key = None
     try:
-        api_key = st.secrets["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"]
+        api_key = st.secrets["GROQ_API_KEY"]
     except Exception:
         pass
     if not api_key:
-        api_key = os.environ.get("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")
+        api_key = os.environ.get("GROQ_API_KEY")
     if api_key:
         return Groq(api_key=api_key)
     return None
+
+
+client = get_groq_client()
 
 
 # ─────────────────────────────────────────────
@@ -1505,6 +1486,15 @@ if st.session_state.assign_open:
 # ─────────────────────────────────────────────
 with st.sidebar:
 
+    # Groq status
+    # Groq verbindingsstatus tonen
+    if client:
+        st.markdown('<span style="color:#1DB87A;font-size:11px">✓ Groq verbonden (llama-3.3-70b)</span>', unsafe_allow_html=True)
+    else:
+        st.markdown('<span style="color:#EF4444;font-size:11px">⚠ Voeg GROQ_API_KEY toe aan secrets.toml</span>', unsafe_allow_html=True)
+
+    st.markdown('<hr class="sb-divider">', unsafe_allow_html=True)
+
     # New Chat button
     if st.button("+ New Chat", key="new_chat", use_container_width=True):
         reset_chat()
@@ -1870,11 +1860,10 @@ with (chat_col if panel_open else st.container()):
             st.session_state.panel_mode = "validation" if st.session_state.panel_mode != "validation" else None
             st.rerun()
 
-    # Score detail expander -------------------------------------------------------------------------------------------------------------------------------
+    # Score detail expander
     if st.session_state.berichtentelling > 0:
         with st.expander("📈 Score detail — laatste evaluatie", expanded=False):
             sc1, sc2, sc3, sc4 = st.columns(4)
-    
             for col, val, naam, beschr in [
                 (sc1, scores["bias"], "Bias", "Stereotypering"),
                 (sc2, scores["hallucinaties"], "Hallucinaties", "Feitelijkheid"),
@@ -2095,7 +2084,7 @@ if panel_open and panel_col is not None:
 # BERICHTVERWERKING
 # ─────────────────────────────────────────────
 if send_clicked and user_input.strip():
-    if not Client:
+    if not client:
         st.warning("⚠️ Voeg een geldige GROQ_API_KEY toe aan .streamlit/secrets.toml of als omgevingsvariabele.")
     else:
         nu = time.strftime("%H:%M")
@@ -2108,7 +2097,7 @@ if send_clicked and user_input.strip():
         })
 
         with st.spinner("Synthetic User denkt na..."):
-            resultaat = vraag_groq(Client, actieve_p, user_input.strip(), st.session_state.api_berichten)
+            resultaat = vraag_groq(client, actieve_p, user_input.strip(), st.session_state.api_berichten)
 
         st.session_state.api_berichten.append({"role": "user", "content": user_input.strip()})
         st.session_state.api_berichten.append({"role": "assistant", "content": resultaat["tekst"]})
