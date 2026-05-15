@@ -10,7 +10,7 @@ import os
 import time
 import math
 import re
-pip install streamlit groq
+!pip install streamlit groq
 
 # ─────────────────────────────────────────────
 # PAGINA CONFIG
