@@ -1,1 +1,1 @@
-mkdir -p .streamlit && echo 'GROQ_API_KEY = "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"' > .streamlit/secrets.toml
+mkdir -p ./streamlit && echo 'GROQ_API_KEY = "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"' > ./streamlit/secrets.toml
