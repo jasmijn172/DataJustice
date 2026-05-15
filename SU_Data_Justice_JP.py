@@ -3,6 +3,8 @@ Data Justice Assistent — Streamlit App
 Exact ontwerp gebaseerd op Archive_4 design
 Groq API (llama-3.3-70b-versatile) voor AI chat
 """
+%pip install streamlit groq
+streamlit run SU_Data_Justice_JP.py
 
 import streamlit as st
 import json
@@ -10,7 +12,7 @@ import os
 import time
 import math
 import re
-%pip install streamlit groq
+from Groq import groq
 
 # ─────────────────────────────────────────────
 # PAGINA CONFIG
