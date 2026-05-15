@@ -13,15 +13,15 @@ from langgraph.graph import StateGraph, START, END
 # TITEL & API KEY
 # ============================================================
 
-st.title("Bias‑Justice Validator & Persona Generator")
+# st.title("Bias‑Justice Validator & Persona Generator")
 
-api_key = st.text_input("Voer je GROQ API key in", type="password")
+# api_key = st.text_input("Voer je GROQ API key in", type="password")
 
-if not api_key:
-    st.warning("Voer eerst je API‑key in om verder te gaan.")
-    st.stop()
+# if not api_key:
+#     st.warning("Voer eerst je API‑key in om verder te gaan.")
+#     st.stop()
 
-os.environ["GROQ_API_KEY"] = api_key
+os.environ["GROQ_API_KEY"] = "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"
 llm = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0.8)
 st.success("Groq‑verbinding klaar")
 
